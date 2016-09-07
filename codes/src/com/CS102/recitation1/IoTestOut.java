@@ -1,12 +1,12 @@
 package com.CS102.recitation1;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 /**
  * Created by Fred Fung on 9/6/2016.
@@ -15,40 +15,54 @@ public class IoTestOut {
 
     public static void main(String[] args) {
         String directory = "D:\\temp\\";
-        Streaming(directory);
-        readLinesUsingFilesWithTryBlock(directory);
-        readLinesUsingFilesWithTryBlock("D:\\some\\directory\\that\\does\\not\\exist\\");
+        readFileOneByOne(directory);
+//        complexReadFile(directory);
+//        readFileOneByOne("D:\\some\\directory\\that\\does\\not\\exist\\");
+//        printToFile(directory);
     }
 
-    private static void Streaming(String directory) {
-        FileInputStream in = null;
-        FileOutputStream out = null;
-
+    private static void readFileOneByOne(String directory){
+        File file = new File(directory+"input");
         try {
-            in = new FileInputStream(directory + "input");
-            out = new FileOutputStream(directory + "output");
-            int c;
-            while ((c = in.read()) != -1) {
-                if (c != 105) {
-                    out.write(c);
-                }
+            //1 fish 2 fish red fish blue fish.
+            Scanner scanner = new Scanner(file);
+            while(scanner.hasNext()){
+                System.out.println(scanner.next());
             }
-            in.close();
-            out.close();
-        } catch (IOException ex) {
+        } catch (FileNotFoundException ex){
             ex.printStackTrace();
         }
     }
 
-    private static void readLinesUsingFilesWithTryBlock(String directory)  {
-        Path path = Paths.get(directory, "input");
-        try{
-            List<String> lines = Files.readAllLines(path);
-            for (String line : lines) {
-                System.out.println(line);
-            }
-        } catch (IOException ex){
+    private static void complexReadFile(String directory)  {
+        File file = new File(directory+"input");
+        try {
+            //1 fish 2 fish red fish blue fish.
+            Scanner scanner = new Scanner(file).useDelimiter(" *fish  *");
+            System.out.println(scanner.nextInt());
+            System.out.println(scanner.nextInt());
+            System.out.println(scanner.next());
+            System.out.println(scanner.next());
+            scanner.close();
+        } catch (FileNotFoundException ex){
             ex.printStackTrace();
         }
+    }
+
+    private static void printToFile(String directory){
+        try {
+            FileWriter fw = new FileWriter(directory+"output", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter printWriter = new PrintWriter(bw);
+//            File file = new File(directory+"output");
+//            PrintWriter printWriter = new PrintWriter(file);
+            printWriter.println("TEST OUTPUT");
+            printWriter.println("LINE TWO");
+            printWriter.append("THIS IS A TEST ");
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
